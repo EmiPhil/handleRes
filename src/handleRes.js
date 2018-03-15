@@ -18,15 +18,21 @@ function handleRes (res) {
     return true
   }
 
-  function reject () {
+  function reject (message, status, trace) {
+    // check if we should proceed. If not, return false
     if (!proceed()) return false
     // assign a falsey "ok" prop to the response body
-
-    // append an error message and a status code to the body
-
-    // check if we should proceed, then send the result
-
-    // return the result of proceed
+    // append an error message, status code, and a trace object to the body
+    var body = {
+      ok: false,
+      // default to an empty message
+      message: message || '',
+      // default to the 500 status code
+      status: status || 500,
+      // default to an empty trace object
+      trace: trace || {}
+    }
+    res.json(body)
     return true
   }
 

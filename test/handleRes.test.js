@@ -56,9 +56,9 @@ test('handleRes.accept should return the value of proceed', t => {
 })
 
 test('handleRes.reject should return the value of proceed', t => {
-  const actualHeadersSent = handleRes({ headersSent: true }).reject()
+  const actualHeadersSent = handleRes({ headersSent: true, json () { } }).reject()
   const expectedHeadersSent = false
-  const actualHeadersNotSent = handleRes({ headersSent: false }).reject()
+  const actualHeadersNotSent = handleRes({ headersSent: false, json () { } }).reject()
   const expectedHeadersNotSent = true
   t.deepEqual(actualHeadersSent, expectedHeadersSent)
   t.deepEqual(actualHeadersNotSent, expectedHeadersNotSent)
@@ -114,5 +114,13 @@ test('handleRes.accept should return all other body props', t => {
 test('handleRes.reject should not proceed if headersSent is true', t => {
   const actual = handleRes({ headersSent: true }).reject()
   const expected = false
+  t.deepEqual(actual, expected)
+})
+
+test('handleRes.reject should use an empty message, status code 500, and an empty trace object by default', t => {
+  let target = {}
+  handleRes({ headersSent: false, json: jsonResponder(target) }).reject()
+  const actual = target.body
+  const expected = { ok: false, message: '', status: 500, trace: {} }
   t.deepEqual(actual, expected)
 })
