@@ -1,8 +1,10 @@
 function handleRes (res) {
   // check if we have already responded to the request
   function proceed () {
+    // if headersSent is undefined, we will return false (!true)
+    var headersSent = res.hasOwnProperty('headersSent') ? res.headersSent : true
     // if we have not sent them, return true
-    return !res.headersSent
+    return !headersSent
   }
 
   function accept () {
