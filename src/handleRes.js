@@ -8,9 +8,11 @@ function handleRes (res) {
   }
 
   function accept () {
+    if (!proceed()) return false
     // add a truthy "ok" prop to the response body
     // check if we should proceed, then send the result
     // return the result of proceed
+    return true
   }
 
   function reject () {
