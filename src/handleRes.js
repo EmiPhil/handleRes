@@ -34,7 +34,7 @@ function handleRes (res) {
    */
   function proceed () {
     // if headersSent is undefined, we will return false (!true)
-    var headersSent = res.hasOwnProperty('headersSent') ? res.headersSent : true
+    var headersSent = typeof res.headersSent === 'boolean' ? res.headersSent : true
     // if we have not sent them, return true
     return !headersSent
   }
