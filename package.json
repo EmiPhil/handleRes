@@ -1,8 +1,8 @@
 {
   "name": "handle-res",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "A small helper library to handle response calls in express-like frameworks",
-  "main": "src/index.js",
+  "main": "src/handleRes.js",
   "files": [
     "src"
   ],
