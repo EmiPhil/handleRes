@@ -6,3 +6,15 @@ test('Module loads', t => {
   const expected = 'function'
   t.deepEqual(actual, expected)
 })
+
+test('handleRes should return the "accept" method', t => {
+  const actual = typeof handleRes().accept
+  const expected = 'function'
+  t.deepEqual(actual, expected)
+})
+
+test('handleRes should return the "reject" method', t => {
+  const actual = typeof handleRes().reject
+  const expected = 'function'
+  t.deepEqual(actual, expected)
+})
