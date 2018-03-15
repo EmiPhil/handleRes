@@ -65,9 +65,9 @@ test('handleRes.reject should return the value of proceed', t => {
 })
 
 test('handleRes.error should return the value of proceed', t => {
-  const actualHeadersSent = handleRes({ headersSent: true }).error()
+  const actualHeadersSent = handleRes({ headersSent: true, sendStatus () { } }).error()
   const expectedHeadersSent = false
-  const actualHeadersNotSent = handleRes({ headersSent: false }).error()
+  const actualHeadersNotSent = handleRes({ headersSent: false, sendStatus () { } }).error()
   const expectedHeadersNotSent = true
   t.deepEqual(actualHeadersSent, expectedHeadersSent)
   t.deepEqual(actualHeadersNotSent, expectedHeadersNotSent)
@@ -141,5 +141,13 @@ const statusResponder = target => status => { target.status = status }
 test('handleRes.error should not proceed if headersSent is true', t => {
   const actual = handleRes({ headersSent: true }).error()
   const expected = false
+  t.deepEqual(actual, expected)
+})
+
+test('handleRes.error should use the http status code 500 by default', t => {
+  const target = {}
+  handleRes({ headersSent: false, sendStatus: statusResponder(target) }).error()
+  const actual = target.status
+  const expected = 500
   t.deepEqual(actual, expected)
 })

@@ -36,11 +36,11 @@ function handleRes (res) {
     return true
   }
 
-  function error () {
+  function error (status) {
+    // check if we should proceed. If not, return false
     if (!proceed()) return false
-    // check if we should proceed, then send an http status code
-
-    // return the result of proceed
+    // send status code 500 by default
+    res.sendStatus(status || 500)
     return true
   }
 
