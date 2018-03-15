@@ -54,3 +54,21 @@ test('handleRes.accept should return the value of proceed', t => {
   t.deepEqual(actualHeadersSent, expectedHeadersSent)
   t.deepEqual(actualHeadersNotSent, expectedHeadersNotSent)
 })
+
+test('handleRes.reject should return the value of proceed', t => {
+  const actualHeadersSent = handleRes({ headersSent: true }).reject()
+  const expectedHeadersSent = false
+  const actualHeadersNotSent = handleRes({ headersSent: false }).reject()
+  const expectedHeadersNotSent = true
+  t.deepEqual(actualHeadersSent, expectedHeadersSent)
+  t.deepEqual(actualHeadersNotSent, expectedHeadersNotSent)
+})
+
+test('handleRes.error should return the value of proceed', t => {
+  const actualHeadersSent = handleRes({ headersSent: true }).error()
+  const expectedHeadersSent = false
+  const actualHeadersNotSent = handleRes({ headersSent: false }).error()
+  const expectedHeadersNotSent = true
+  t.deepEqual(actualHeadersSent, expectedHeadersSent)
+  t.deepEqual(actualHeadersNotSent, expectedHeadersNotSent)
+})

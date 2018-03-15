@@ -16,6 +16,7 @@ function handleRes (res) {
   }
 
   function reject () {
+    if (!proceed()) return false
     // assign a falsey "ok" prop to the response body
 
     // append an error message and a status code to the body
@@ -23,12 +24,15 @@ function handleRes (res) {
     // check if we should proceed, then send the result
 
     // return the result of proceed
+    return true
   }
 
   function error () {
+    if (!proceed()) return false
     // check if we should proceed, then send an http status code
 
     // return the result of proceed
+    return true
   }
 
   return {
