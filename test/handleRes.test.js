@@ -110,3 +110,9 @@ test('handleRes.accept should return all other body props', t => {
   const expected = { ok: true, foo: 'bar', bar: 'foo' }
   t.deepEqual(actual, expected)
 })
+
+test('handleRes.reject should not proceed if headersSent is true', t => {
+  const actual = handleRes({ headersSent: true }).reject()
+  const expected = false
+  t.deepEqual(actual, expected)
+})
