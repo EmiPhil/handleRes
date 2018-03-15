@@ -151,3 +151,11 @@ test('handleRes.error should use the http status code 500 by default', t => {
   const expected = 500
   t.deepEqual(actual, expected)
 })
+
+test('handleRes.error should pass through other status codes', t => {
+  const target = {}
+  handleRes({ headersSent: false, sendStatus: statusResponder(target) }).error(999)
+  const actual = target.status
+  const expected = 999
+  t.deepEqual(actual, expected)
+})
