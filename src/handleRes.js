@@ -21,9 +21,16 @@ function handleRes () {
     // return the result of proceed
   }
 
+  function error () {
+    // check if we should proceed, then send an http status code
+
+    // return the result of proceed
+  }
+
   return {
     accept: accept,
-    reject: reject
+    reject: reject,
+    error: error
   }
 }
 

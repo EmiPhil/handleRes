@@ -18,3 +18,9 @@ test('handleRes should return the "reject" method', t => {
   const expected = 'function'
   t.deepEqual(actual, expected)
 })
+
+test('handleRes should return the "error" method', t => {
+  const actual = typeof handleRes().error
+  const expected = 'function'
+  t.deepEqual(actual, expected)
+})
