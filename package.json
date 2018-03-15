@@ -1,0 +1,57 @@
+{
+  "name": "handle-res",
+  "version": "1.0.0",
+  "description": "A small helper library to handle response calls in express-like frameworks",
+  "main": "src/index.js",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "lint": "eslint src && echo 'Lint complete.'",
+    "cov": "nyc report --reporter=lcov && echo 'Cov complete.'",
+    "test": "ava",
+    "test:cov": "nyc npm run test && npm run cov",
+    "test:suite": "npm run test:cov && npm run lint",
+    "watch": "watch 'clear && npm run test:suite' src test",
+    "start": "npm run watch",
+    "verify": "npm run -s test && npm run -s lint",
+    "precommit": "npm run verify",
+    "preversion": "npm run test:suite",
+    "version": "git add -A",
+    "postversion": "git push && git push --tags"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.test.js"
+    ],
+    "concurrency": 20
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmiPhil/handleRes.git"
+  },
+  "keywords": [
+    "express",
+    "res",
+    "handle-res",
+    "handleRes"
+  ],
+  "author": "EmiPhil",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EmiPhil/handleRes/issues"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "eslint": "^4.18.2",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "express": "^4.16.3",
+    "nyc": "^11.6.0",
+    "standard": "^11.0.1",
+    "watch": "^1.0.2"
+  }
+}
