@@ -6,12 +6,23 @@ function handleRes () {
   // otherwise, return true
 
   function accept () {
-    // add an ok boolean to the body
+    // add a truthy "ok" prop to the response body
     // check if we should proceed, then send the result
   }
 
+  function reject () {
+    // assign a falsey "ok" prop to the response body
+
+    // append an error message and a status code to the body
+
+    // check if we should proceed, then send the result
+
+    // return the result of proceed
+  }
+
   return {
-    accept: accept
+    accept: accept,
+    reject: reject
   }
 }
 
