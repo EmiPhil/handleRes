@@ -1,12 +1,13 @@
 {
   "name": "handle-res",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A small helper library to handle response calls in express-like frameworks",
   "main": "src/index.js",
   "files": [
     "src"
   ],
   "scripts": {
+    "document": "jsdoc2md src/handleRes.js > API.md",
     "lint": "eslint src && echo 'Lint complete.'",
     "cov": "nyc report --reporter=lcov && echo 'Cov complete.'",
     "test": "ava",
@@ -16,7 +17,7 @@
     "start": "npm run watch",
     "verify": "npm run -s test && npm run -s lint",
     "precommit": "npm run verify",
-    "preversion": "npm run test:suite",
+    "preversion": "npm run test:suite && npm run document",
     "version": "git add -A",
     "postversion": "git push && git push --tags"
   },
