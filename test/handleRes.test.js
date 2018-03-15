@@ -24,3 +24,9 @@ test('handleRes should return the "error" method', t => {
   const expected = 'function'
   t.deepEqual(actual, expected)
 })
+
+test('handleRes should return an internal reference to the proceed method', t => {
+  const actual = typeof handleRes({}).proceed
+  const expected = 'boolean'
+  t.deepEqual(actual, expected)
+})

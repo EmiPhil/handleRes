@@ -1,9 +1,9 @@
-function handleRes () {
+function handleRes (res) {
   // check if we have already responded to the request
-
-  // if we have, send a warning log and do nothing
-
-  // otherwise, return true
+  function proceed () {
+    // if we have not sent them, return true
+    return !res.headersSent
+  }
 
   function accept () {
     // add a truthy "ok" prop to the response body
@@ -30,7 +30,8 @@ function handleRes () {
   return {
     accept: accept,
     reject: reject,
-    error: error
+    error: error,
+    get proceed () { return proceed() }
   }
 }
 
