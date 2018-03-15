@@ -132,3 +132,14 @@ test('handleRes.reject should accept arguments', t => {
   const expected = { ok: false, message: 'Message', status: '500', trace: { foo: 'bar' } }
   t.deepEqual(actual, expected)
 })
+
+/**
+ * the following function is to spy on the result of the .error method. It is required because .error is an impure function with side effects (we call res.sendStatus for the user instead of returning the status)
+ */
+const statusResponder = target => status => { target.status = status }
+
+test('handleRes.error should not proceed if headersSent is true', t => {
+  const actual = handleRes({ headersSent: true }).error()
+  const expected = false
+  t.deepEqual(actual, expected)
+})
