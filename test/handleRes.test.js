@@ -85,7 +85,7 @@ test('handleRes.accept should not proceed if headersSent is true', t => {
 })
 
 test('handleRes.accept should use an empty object by default', t => {
-  let target = {}
+  const target = {}
   handleRes({ headersSent: false, json: jsonResponder(target) }).accept()
   const actual = typeof target.body
   const expected = 'object'
@@ -93,7 +93,7 @@ test('handleRes.accept should use an empty object by default', t => {
 })
 
 test('handleRes.accept should assign ok to the body object', t => {
-  let target = {}
+  const target = {}
   handleRes({ headersSent: false, json: jsonResponder(target) }).accept({})
   const actual = target.body
   const expected = { ok: true }
@@ -101,7 +101,7 @@ test('handleRes.accept should assign ok to the body object', t => {
 })
 
 test('handleRes.accept should return all other body props', t => {
-  let target = {}
+  const target = {}
   handleRes({ headersSent: false, json: jsonResponder(target) }).accept({
     foo: 'bar',
     bar: 'foo'
@@ -118,9 +118,17 @@ test('handleRes.reject should not proceed if headersSent is true', t => {
 })
 
 test('handleRes.reject should use an empty message, status code 500, and an empty trace object by default', t => {
-  let target = {}
+  const target = {}
   handleRes({ headersSent: false, json: jsonResponder(target) }).reject()
   const actual = target.body
   const expected = { ok: false, message: '', status: 500, trace: {} }
+  t.deepEqual(actual, expected)
+})
+
+test('handleRes.reject should accept arguments', t => {
+  const target = {}
+  handleRes({ headersSent: false, json: jsonResponder(target) }).reject('Message', '500', { foo: 'bar' })
+  const actual = target.body
+  const expected = { ok: false, message: 'Message', status: '500', trace: { foo: 'bar' } }
   t.deepEqual(actual, expected)
 })
