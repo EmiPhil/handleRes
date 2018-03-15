@@ -7,11 +7,14 @@ function handleRes (res) {
     return !headersSent
   }
 
-  function accept () {
+  function accept (body) {
+    // check if we should proceed. If not, return false
     if (!proceed()) return false
+    // use an empty object if no body is provided
+    body = body || {}
     // add a truthy "ok" prop to the response body
-    // check if we should proceed, then send the result
-    // return the result of proceed
+    body.ok = true
+    res.json(body)
     return true
   }
 

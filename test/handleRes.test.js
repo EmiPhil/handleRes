@@ -47,9 +47,9 @@ test('handleRes.proceed should return false if the headersSent prop is undefined
 })
 
 test('handleRes.accept should return the value of proceed', t => {
-  const actualHeadersSent = handleRes({ headersSent: true }).accept()
+  const actualHeadersSent = handleRes({ headersSent: true, json () { } }).accept()
   const expectedHeadersSent = false
-  const actualHeadersNotSent = handleRes({ headersSent: false }).accept()
+  const actualHeadersNotSent = handleRes({ headersSent: false, json () { } }).accept()
   const expectedHeadersNotSent = true
   t.deepEqual(actualHeadersSent, expectedHeadersSent)
   t.deepEqual(actualHeadersNotSent, expectedHeadersNotSent)
@@ -71,4 +71,25 @@ test('handleRes.error should return the value of proceed', t => {
   const expectedHeadersNotSent = true
   t.deepEqual(actualHeadersSent, expectedHeadersSent)
   t.deepEqual(actualHeadersNotSent, expectedHeadersNotSent)
+})
+
+/**
+ * the following function is to spy on the result of the .accept and .reject call. It is required because .accept and .reject are impure functions with side effects (we call res.json for the user instead of returning the body)
+ */
+const jsonResponder = target => body => { target.body = body }
+
+test('handleRes.accept should use an empty object by default', t => {
+  let target = {}
+  handleRes({ headersSent: false, json: jsonResponder(target) }).accept()
+  const actual = typeof target.body
+  const expected = 'object'
+  t.deepEqual(actual, expected)
+})
+
+test('handleRes.accept should assign ok to the body object', t => {
+  let target = {}
+  handleRes({ headersSent: false, json: jsonResponder(target) }).accept({})
+  const actual = target.body
+  const expected = { ok: true }
+  t.deepEqual(actual, expected)
 })
