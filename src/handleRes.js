@@ -40,27 +40,30 @@ function handleRes (res) {
   }
 
   /**
-   * Send an http response with status code 200 and append a truthy ok prop to the response body
+   * Send an http response with the givin status code and append a truthy ok prop to the response body
    * @name accept
    * @kind function
    * @since 1.1.0
    * @param {object} [body={}] - The json object to send in the response
+   * @param {number|string} [status=200] - The HTTP status code to return to client
    * @returns {boolean} true means that the response was sent, false means it was not. This method will only return false if a response has already been sent for the request.
    * @example
    * handleRes(res).accept({
    *   foo: 'bar'
    * })
    *
-   * // will execute res.json({ ok: true, foo: bar })
+   * // will execute res.status(200).json({ ok: true, foo: bar })
    */
-  function accept (body) {
+  function accept (body, status) {
     // check if we should proceed. If not, return false
     if (!proceed()) return false
+    // use 200 status if no status is provided
+    status = status || 200
     // use an empty object if no body is provided
     body = body || {}
     // add a truthy "ok" prop to the response body
     body.ok = true
-    res.json(body)
+    res.status(status).json(body)
     return true
   }
 
@@ -75,11 +78,13 @@ function handleRes (res) {
    * @returns {boolean} true means that the response was sent, false means it was not. This method will only return false if a response has already been sent for the request.
    * @example
    * handleRes(res).reject('Wrong password', 401, { email: '' })
-   * // will execute res.json({ ok: false, message: 'Wrong password', status: 401, trace: { email: '' } })
+   * // will execute res.status(401).json({ ok: false, message: 'Wrong password', status: 401, trace: { email: '' } })
    */
   function reject (message, status, trace) {
     // check if we should proceed. If not, return false
     if (!proceed()) return false
+    // use 500 status if no status is provided
+    status = status || 500
     // assign a falsey "ok" prop to the response body
     // append an error message, status code, and a trace object to the body
     var body = {
@@ -87,11 +92,11 @@ function handleRes (res) {
       // default to an empty message
       message: message || '',
       // default to the 500 status code
-      status: status || 500,
+      status: status,
       // default to an empty trace object
       trace: trace || {}
     }
-    res.json(body)
+    res.status(status).json(body)
     return true
   }
 
