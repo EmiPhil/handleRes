@@ -4,7 +4,7 @@
  * @since 1.1.0
  * @module handleRes
  * @param {object} res - The response object from an Express app or similar
- * @returns {object} An object containing the .accept, .reject, and .error methods, and the .proceed getter.
+ * @returns {object} An object containing the .accept, and .reject methods, and the .proceed getter.
  * @example
  * const handleRes = require('handle-res')
  * const express = require('express')
@@ -100,29 +100,9 @@ function handleRes (res) {
     return true
   }
 
-  /**
-   * Send an http response with the specified status and default http headers for the code if present, or however the http framework handles non-standard codes otherwise (see http://expressjs.com/en/api.html#res.sendStatus for express specific handling of non-standard errors). This method should only be used as a catch-all - ideally you implement specific behaviour for all known error cases using reject so that the client application can gracefully handle them.
-   * @name error
-   * @kind function
-   * @since 1.1.0
-   * @param {number} [status=500] - The http status code to send. It is highly recommended to use the standard codes: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-   * @returns {boolean} true means that the response was sent, false means it was not. This method will only return false if a response has already been sent for the request.
-   * @example
-   * handleRes(res).error(503)
-   * // will execute res.sendStatus(503)
-   */
-  function error (status) {
-    // check if we should proceed. If not, return false
-    if (!proceed()) return false
-    // send status code 500 by default
-    res.sendStatus(status || 500)
-    return true
-  }
-
   return {
     accept: accept,
     reject: reject,
-    error: error,
     get proceed () { return proceed() }
   }
 }
