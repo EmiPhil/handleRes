@@ -30,7 +30,7 @@ app.route('/', function (req, res) {
 
 * [handleRes](#module_handleRes) ⇒ <code>object</code>
     * [~proceed](#module_handleRes..proceed) ⇒ <code>boolean</code>
-    * [~accept([body])](#module_handleRes..accept) ⇒ <code>boolean</code>
+    * [~accept([body], [status])](#module_handleRes..accept) ⇒ <code>boolean</code>
     * [~reject([message], [status], [trace])](#module_handleRes..reject) ⇒ <code>boolean</code>
     * [~error([status])](#module_handleRes..error) ⇒ <code>boolean</code>
 
@@ -50,8 +50,8 @@ handleRes(res).proceed // either true or false
 ```
 <a name="module_handleRes..accept"></a>
 
-### handleRes~accept([body]) ⇒ <code>boolean</code>
-Send an http response with status code 200 and append a truthy ok prop to the response body
+### handleRes~accept([body], [status]) ⇒ <code>boolean</code>
+Send an http response with the givin status code and append a truthy ok prop to the response body
 
 **Kind**: inner method of [<code>handleRes</code>](#module_handleRes)  
 **Returns**: <code>boolean</code> - true means that the response was sent, false means it was not. This method will only return false if a response has already been sent for the request.  
@@ -60,6 +60,7 @@ Send an http response with status code 200 and append a truthy ok prop to the re
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | [body] | <code>object</code> | <code>{}</code> | The json object to send in the response |
+| [status] | <code>number</code> \| <code>string</code> | <code>200</code> | The HTTP status code to return to client |
 
 **Example**  
 ```js
@@ -67,7 +68,7 @@ handleRes(res).accept({
   foo: 'bar'
 })
 
-// will execute res.json({ ok: true, foo: bar })
+// will execute res.status(200).json({ ok: true, foo: bar })
 ```
 <a name="module_handleRes..reject"></a>
 
@@ -87,7 +88,7 @@ Send an http response with status code 200 and append a falsey ok prop to the re
 **Example**  
 ```js
 handleRes(res).reject('Wrong password', 401, { email: '' })
-// will execute res.json({ ok: false, message: 'Wrong password', status: 401, trace: { email: '' } })
+// will execute res.status(401).json({ ok: false, message: 'Wrong password', status: 401, trace: { email: '' } })
 ```
 <a name="module_handleRes..error"></a>
 
