@@ -1,6 +1,6 @@
 {
   "name": "handle-res",
-  "version": "1.3.1",
+  "version": "2.0.0",
   "description": "A small helper library to handle response calls in express-like frameworks",
   "main": "src/handleRes.js",
   "files": [
@@ -17,8 +17,8 @@
     "start": "npm run watch",
     "verify": "npm run -s test && npm run -s lint",
     "precommit": "npm run verify",
-    "preversion": "npm run test:suite && npm run document",
-    "version": "git add -A",
+    "preversion": "npm run test:suite",
+    "version": "npm run document && git add -A",
     "postversion": "git push && git push --tags"
   },
   "ava": {
@@ -51,6 +51,7 @@
     "eslint-plugin-promise": "^3.7.0",
     "eslint-plugin-standard": "^3.0.1",
     "express": "^4.16.3",
+    "jsdoc-to-markdown": "^4.0.1",
     "nyc": "^11.6.0",
     "request": "^2.85.0",
     "request-promise-native": "^1.0.5",

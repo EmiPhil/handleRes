@@ -14,44 +14,20 @@ A small (< 60 loc) helper library to handle response calls in express like frame
 
 ## Usage
 
-The handleRes module is split into 3 main methods, `.accept`, `.reject`, and `.error`.
+The handleRes module is split into 2 main methods, `.accept`, and `.reject`.
 
-**`.accept` and `.reject` will always return http status code 200.** You must check for failures via the body.ok prop. The reason that `.reject` sends back the `Status: OK` http code is to allow developers to create their own failure context. Use `.reject` when you are able to determine the error. For example, if a user enters a wrong password to your `verifyLogin` route, you should do:
+The reason that `.reject` sends back the `Status: OK` http code is to allow developers to create their own failure context. Use `.reject` when you are able to determine the error. For example, if a user enters a wrong password to your `verifyLogin` route, you should do:
 
 ```js
 app.get('/verifyLogin', function (req, res) {
   // check is password is valid somehow
   const passwordValid = false
   if (!passwordValid) {
-    return handleRes(res).reject({
-      message: 'Password invalid',
-      status: 401, // this could be any code you want
-      trace: {
-        // and you can add extra context here
-      }
+    return handleRes(res).reject(
+      'Password invalid',
+      401, // this could be any code you want
+      { /* and you can add extra context here */ }
     })
-  }
-})
-```
-
-On the other hand, the `.error` method takes an http status code and sends the default http failure message. While you should do your best to know and handle all of your errors via `.reject` calls, it can be nice to have a catch-all method for surprise errors where you do not want to send the javascript stack trace to clients:
-
-```js
-app.get('/verifyLogin', async function (req, res) {
-  const dbClient // some dbClient or something
-  try {
-    const user = await dbClient.findById(req.body.email) // or whatever
-    const pass = user.password
-    const passwordValid = checkHash(pass, req.body.password)
-    if (!passwordValid) return handleRes(res).reject('Invalid password', 401)
-
-    // if we get here, the password was valid
-    delete user.password
-
-    return handleRes(res).accept({ user })
-  } catch (err) {
-    // too lazy to implement dbClient errors, so use a catch all
-    return handleRes(res).error(500)
   }
 })
 ```
@@ -73,8 +49,8 @@ app.get('/success', function (req, res) {
     data: {}
   })
 
-  // the above will call res.json({ ok: true, data: {} })
-  
+  // the above will call res.status(200).json({ ok: true, data: {} })
+
   console.log(sent) // true
 
   sent = handle(res).accept({
@@ -87,27 +63,23 @@ app.get('/success', function (req, res) {
 
 app.get('/known-failure', function (req, res) {
   // .reject accepts a message, code, and trace object
-  handleRes(res).reject('Known failure!', 102301, {
-    route: req.originalUrl
+  handleRes(res).reject('Known failure!', 418, {
+    route: req.originalUrl,
+    code: 102301
   })
 
   /**
    * the above will call
-   * res.json({
+   * res.status(418).json({
    *   ok: false,
    *   message: 'Known failure!',
-   *   status: 102301,
+   *   status: 418,
    *   trace: {
    *     route: '/known-failure'
+   *     code: 102301
    *   }
    * })
    */
-})
-
-app.get('/unknown-failure', function (req, res) {
-  handleRes(res).error(500)
-
-  // the above will call res.sendHeaders(500)
 })
 ```
 

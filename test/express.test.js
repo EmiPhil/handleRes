@@ -16,8 +16,6 @@ app.get('/reject', (req, res) => handleRes(res).reject('Bad request', '900', {
 
 app.get('/reject_2', (req, res) => handleRes(res).reject('', 900, {}))
 
-app.get('/error', (req, res) => handleRes(res).error(501))
-
 app.get('/multiple_accept', (req, res) => {
   handleRes(res).accept()
   handleRes(res).accept()
@@ -26,11 +24,6 @@ app.get('/multiple_accept', (req, res) => {
 app.get('/multiple_reject', (req, res) => {
   handleRes(res).reject()
   handleRes(res).reject()
-})
-
-app.get('/multiple_error', (req, res) => {
-  handleRes(res).error()
-  handleRes(res).error()
 })
 
 let server
@@ -53,7 +46,7 @@ test('accept endpoint should work', async t => {
 })
 
 test('reject endpoint should work with string error', async t => {
-  const res = await request.get(`${uri}/reject`)
+  const res = (await t.throws(request.get(`${uri}/reject`))).error
   const actual = JSON.parse(res)
   const expected = {
     ok: false,
@@ -67,7 +60,7 @@ test('reject endpoint should work with string error', async t => {
 })
 
 test('reject endpoint should work with numerical error', async t => {
-  const res = await request.get(`${uri}/reject_2`)
+  const res = (await t.throws(request.get(`${uri}/reject_2`))).error
   const actual = JSON.parse(res)
   const expected = {
     ok: false,
@@ -78,16 +71,6 @@ test('reject endpoint should work with numerical error', async t => {
   t.deepEqual(actual, expected)
 })
 
-test('error endpoint should work', async t => {
-  try {
-    await request.get(`${uri}/error`)
-  } catch (res) {
-    const actual = res.message
-    const expected = '501 - "Not Implemented"'
-    t.deepEqual(actual, expected)
-  }
-})
-
 test('Multiple attempts to accept should not throw an error', async t => {
   const res = await request.get(`${uri}/multiple_accept`)
   const actual = JSON.parse(res)
@@ -96,18 +79,8 @@ test('Multiple attempts to accept should not throw an error', async t => {
 })
 
 test('Multiple attempts to reject should not throw an error', async t => {
-  const res = await request.get(`${uri}/multiple_reject`)
+  const res = (await t.throws(request.get(`${uri}/multiple_reject`))).error
   const actual = JSON.parse(res)
   const expected = { ok: false, message: '', status: 500, trace: {} }
   t.deepEqual(actual, expected)
-})
-
-test('Multiple attempts to error should not throw an error', async t => {
-  try {
-    await request.get(`${uri}/multiple_error`)
-  } catch (res) {
-    const actual = res.message
-    const expected = '500 - "Internal Server Error"'
-    t.deepEqual(actual, expected)
-  }
 })

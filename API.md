@@ -3,7 +3,7 @@
 ## handleRes ⇒ <code>object</code>
 The primary constructor for the handleRes methods.
 
-**Returns**: <code>object</code> - An object containing the .accept, .reject, and .error methods, and the .proceed getter.  
+**Returns**: <code>object</code> - An object containing the .accept, and .reject methods, and the .proceed getter.  
 **Since**: 1.1.0  
 
 | Param | Type | Description |
@@ -30,9 +30,8 @@ app.route('/', function (req, res) {
 
 * [handleRes](#module_handleRes) ⇒ <code>object</code>
     * [~proceed](#module_handleRes..proceed) ⇒ <code>boolean</code>
-    * [~accept([body])](#module_handleRes..accept) ⇒ <code>boolean</code>
+    * [~accept([body], [status])](#module_handleRes..accept) ⇒ <code>boolean</code>
     * [~reject([message], [status], [trace])](#module_handleRes..reject) ⇒ <code>boolean</code>
-    * [~error([status])](#module_handleRes..error) ⇒ <code>boolean</code>
 
 <a name="module_handleRes..proceed"></a>
 
@@ -50,8 +49,8 @@ handleRes(res).proceed // either true or false
 ```
 <a name="module_handleRes..accept"></a>
 
-### handleRes~accept([body]) ⇒ <code>boolean</code>
-Send an http response with status code 200 and append a truthy ok prop to the response body
+### handleRes~accept([body], [status]) ⇒ <code>boolean</code>
+Send an http response with the givin status code and append a truthy ok prop to the response body
 
 **Kind**: inner method of [<code>handleRes</code>](#module_handleRes)  
 **Returns**: <code>boolean</code> - true means that the response was sent, false means it was not. This method will only return false if a response has already been sent for the request.  
@@ -60,6 +59,7 @@ Send an http response with status code 200 and append a truthy ok prop to the re
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | [body] | <code>object</code> | <code>{}</code> | The json object to send in the response |
+| [status] | <code>number</code> \| <code>string</code> | <code>200</code> | The HTTP status code to return to client |
 
 **Example**  
 ```js
@@ -67,7 +67,7 @@ handleRes(res).accept({
   foo: 'bar'
 })
 
-// will execute res.json({ ok: true, foo: bar })
+// will execute res.status(200).json({ ok: true, foo: bar })
 ```
 <a name="module_handleRes..reject"></a>
 
@@ -87,23 +87,5 @@ Send an http response with status code 200 and append a falsey ok prop to the re
 **Example**  
 ```js
 handleRes(res).reject('Wrong password', 401, { email: '' })
-// will execute res.json({ ok: false, message: 'Wrong password', status: 401, trace: { email: '' } })
-```
-<a name="module_handleRes..error"></a>
-
-### handleRes~error([status]) ⇒ <code>boolean</code>
-Send an http response with the specified status and default http headers for the code if present, or however the http framework handles non-standard codes otherwise (see http://expressjs.com/en/api.html#res.sendStatus for express specific handling of non-standard errors). This method should only be used as a catch-all - ideally you implement specific behaviour for all known error cases using reject so that the client application can gracefully handle them.
-
-**Kind**: inner method of [<code>handleRes</code>](#module_handleRes)  
-**Returns**: <code>boolean</code> - true means that the response was sent, false means it was not. This method will only return false if a response has already been sent for the request.  
-**Since**: 1.1.0  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [status] | <code>number</code> | <code>500</code> | The http status code to send. It is highly recommended to use the standard codes: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status |
-
-**Example**  
-```js
-handleRes(res).error(503)
-// will execute res.sendStatus(503)
+// will execute res.status(401).json({ ok: false, message: 'Wrong password', status: 401, trace: { email: '' } })
 ```
