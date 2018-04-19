@@ -3,7 +3,7 @@
 ## handleRes ⇒ <code>object</code>
 The primary constructor for the handleRes methods.
 
-**Returns**: <code>object</code> - An object containing the .accept, .reject, and .error methods, and the .proceed getter.  
+**Returns**: <code>object</code> - An object containing the .accept, and .reject methods, and the .proceed getter.  
 **Since**: 1.1.0  
 
 | Param | Type | Description |
@@ -32,7 +32,6 @@ app.route('/', function (req, res) {
     * [~proceed](#module_handleRes..proceed) ⇒ <code>boolean</code>
     * [~accept([body], [status])](#module_handleRes..accept) ⇒ <code>boolean</code>
     * [~reject([message], [status], [trace])](#module_handleRes..reject) ⇒ <code>boolean</code>
-    * [~error([status])](#module_handleRes..error) ⇒ <code>boolean</code>
 
 <a name="module_handleRes..proceed"></a>
 
@@ -89,22 +88,4 @@ Send an http response with status code 200 and append a falsey ok prop to the re
 ```js
 handleRes(res).reject('Wrong password', 401, { email: '' })
 // will execute res.status(401).json({ ok: false, message: 'Wrong password', status: 401, trace: { email: '' } })
-```
-<a name="module_handleRes..error"></a>
-
-### handleRes~error([status]) ⇒ <code>boolean</code>
-Send an http response with the specified status and default http headers for the code if present, or however the http framework handles non-standard codes otherwise (see http://expressjs.com/en/api.html#res.sendStatus for express specific handling of non-standard errors). This method should only be used as a catch-all - ideally you implement specific behaviour for all known error cases using reject so that the client application can gracefully handle them.
-
-**Kind**: inner method of [<code>handleRes</code>](#module_handleRes)  
-**Returns**: <code>boolean</code> - true means that the response was sent, false means it was not. This method will only return false if a response has already been sent for the request.  
-**Since**: 1.1.0  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| [status] | <code>number</code> | <code>500</code> | The http status code to send. It is highly recommended to use the standard codes: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status |
-
-**Example**  
-```js
-handleRes(res).error(503)
-// will execute res.sendStatus(503)
 ```
