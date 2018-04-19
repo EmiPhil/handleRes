@@ -16,19 +16,17 @@ A small (< 60 loc) helper library to handle response calls in express like frame
 
 The handleRes module is split into 3 main methods, `.accept`, `.reject`, and `.error`.
 
-**`.accept` and `.reject` will always return http status code 200.** You must check for failures via the body.ok prop. The reason that `.reject` sends back the `Status: OK` http code is to allow developers to create their own failure context. Use `.reject` when you are able to determine the error. For example, if a user enters a wrong password to your `verifyLogin` route, you should do:
+The reason that `.reject` sends back the `Status: OK` http code is to allow developers to create their own failure context. Use `.reject` when you are able to determine the error. For example, if a user enters a wrong password to your `verifyLogin` route, you should do:
 
 ```js
 app.get('/verifyLogin', function (req, res) {
   // check is password is valid somehow
   const passwordValid = false
   if (!passwordValid) {
-    return handleRes(res).reject({
-      message: 'Password invalid',
-      status: 401, // this could be any code you want
-      trace: {
-        // and you can add extra context here
-      }
+    return handleRes(res).reject(
+      'Password invalid',
+      401, // this could be any code you want
+      { /* and you can add extra context here */ }
     })
   }
 })
@@ -73,8 +71,8 @@ app.get('/success', function (req, res) {
     data: {}
   })
 
-  // the above will call res.json({ ok: true, data: {} })
-  
+  // the above will call res.status(200).json({ ok: true, data: {} })
+
   console.log(sent) // true
 
   sent = handle(res).accept({
@@ -87,18 +85,20 @@ app.get('/success', function (req, res) {
 
 app.get('/known-failure', function (req, res) {
   // .reject accepts a message, code, and trace object
-  handleRes(res).reject('Known failure!', 102301, {
-    route: req.originalUrl
+  handleRes(res).reject('Known failure!', 418, {
+    route: req.originalUrl,
+    code: 102301
   })
 
   /**
    * the above will call
-   * res.json({
+   * res.status(418).json({
    *   ok: false,
    *   message: 'Known failure!',
-   *   status: 102301,
+   *   status: 418,
    *   trace: {
    *     route: '/known-failure'
+   *     code: 102301
    *   }
    * })
    */
