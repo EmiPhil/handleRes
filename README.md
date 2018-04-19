@@ -14,7 +14,7 @@ A small (< 60 loc) helper library to handle response calls in express like frame
 
 ## Usage
 
-The handleRes module is split into 3 main methods, `.accept`, `.reject`, and `.error`.
+The handleRes module is split into 2 main methods, `.accept`, and `.reject`.
 
 The reason that `.reject` sends back the `Status: OK` http code is to allow developers to create their own failure context. Use `.reject` when you are able to determine the error. For example, if a user enters a wrong password to your `verifyLogin` route, you should do:
 
@@ -28,28 +28,6 @@ app.get('/verifyLogin', function (req, res) {
       401, // this could be any code you want
       { /* and you can add extra context here */ }
     })
-  }
-})
-```
-
-On the other hand, the `.error` method takes an http status code and sends the default http failure message. While you should do your best to know and handle all of your errors via `.reject` calls, it can be nice to have a catch-all method for surprise errors where you do not want to send the javascript stack trace to clients:
-
-```js
-app.get('/verifyLogin', async function (req, res) {
-  const dbClient // some dbClient or something
-  try {
-    const user = await dbClient.findById(req.body.email) // or whatever
-    const pass = user.password
-    const passwordValid = checkHash(pass, req.body.password)
-    if (!passwordValid) return handleRes(res).reject('Invalid password', 401)
-
-    // if we get here, the password was valid
-    delete user.password
-
-    return handleRes(res).accept({ user })
-  } catch (err) {
-    // too lazy to implement dbClient errors, so use a catch all
-    return handleRes(res).error(500)
   }
 })
 ```
@@ -102,12 +80,6 @@ app.get('/known-failure', function (req, res) {
    *   }
    * })
    */
-})
-
-app.get('/unknown-failure', function (req, res) {
-  handleRes(res).error(500)
-
-  // the above will call res.sendHeaders(500)
 })
 ```
 
